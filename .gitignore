@@ -1,0 +1,47 @@
+# ============================================
+# IGNORAR ARCHIVOS DE examen_proyecto/
+# ============================================
+
+# Dependencias
+examen_proyecto/node_modules/
+
+# React Native - Android (archivos compilados y caché)
+examen_proyecto/android/app/build/
+examen_proyecto/android/app/.cxx/
+examen_proyecto/android/build/
+examen_proyecto/android/.gradle/
+examen_proyecto/android/local.properties
+examen_proyecto/android/*.iml
+examen_proyecto/android/.idea/
+
+# Metro bundler
+examen_proyecto/.metro-health-check*
+examen_proyecto/metro-error.log
+
+# Archivos de entorno
+examen_proyecto/.env
+examen_proyecto/.env.local
+examen_proyecto/.env.production
+
+# Sistema operativo (archivos basura)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / Editor (global)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de respaldo
+*.bak
+*.old
+*.orig
