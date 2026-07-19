@@ -1,0 +1,21 @@
+# Build
+build/
+.gradle/
+*.apk
+*.aab
+
+# IDE
+.idea/
+*.iml
+.kotlin/
+
+# Local
+local.properties
+
+# OS
+.DS_Store
+
+# Archivos de error
+*.log
+hs_err_pid*
+replay_pid*
