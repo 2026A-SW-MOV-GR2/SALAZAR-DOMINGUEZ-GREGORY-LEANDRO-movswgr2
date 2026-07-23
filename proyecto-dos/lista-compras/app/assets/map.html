@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        html, body, #map { height: 100%; width: 100%; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; background-color: #22242A; }
+        .leaflet-container { background-color: #22242A; }
+        .leaflet-popup-content-wrapper { background-color: #2C2E36; color: #FFFFFF; border-radius: 10px; padding: 2px 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid #4A4D5A; }
+        .leaflet-popup-content { margin: 8px 10px; }
+        .leaflet-popup-tip { background-color: #2C2E36; }
+        .popup-badge { background-color: #FF5733; color: #FFFFFF; font-size: 9px; font-weight: bold; padding: 1px 4px; border-radius: 3px; display: inline-block; margin-bottom: 2px; }
+        .popup-title { font-weight: bold; color: #FFFFFF; font-size: 13px; margin-bottom: 1px; }
+        .popup-price { color: #FF5733; font-weight: 800; font-size: 14px; margin: 2px 0; }
+        .popup-store { color: #B0B3C0; font-size: 11px; margin-bottom: 4px; }
+        .btn-add { background: #FF5733; color: #FFFFFF; border: none; padding: 5px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; width: 100%; }
+        .btn-add:active { background: #e04826; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map', { zoomControl: true }).setView([-0.2201, -78.5123], 12);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        var allPromos = [
+            { id: 2, nombre: "Leche Entera 1L", precio: 1.25, tienda: "Sucursal Norte", latitude: -0.1807, longitude: -78.4678 },
+            { id: 1, nombre: "Aceite de Oliva 1L", precio: 8.50, tienda: "Sucursal Norte", latitude: -0.1807, longitude: -78.4678 },
+            { id: 3, nombre: "Queso Fresco 500g", precio: 3.50, tienda: "Sucursal Norte", latitude: -0.1807, longitude: -78.4678 },
+            
+            { id: 6, nombre: "Atún en Agua 170g", precio: 1.50, tienda: "Sucursal Centro", latitude: -0.2201, longitude: -78.5123 },
+            { id: 5, nombre: "Pan Molde Integral", precio: 2.10, tienda: "Sucursal Centro", latitude: -0.2201, longitude: -78.5123 },
+            { id: 4, nombre: "Arroz Súper Extra 5kg", precio: 6.75, tienda: "Sucursal Centro", latitude: -0.2201, longitude: -78.5123 },
+
+            { id: 9, nombre: "Manzanas 1kg", precio: 2.20, tienda: "Sucursal Sur", latitude: -0.2712, longitude: -78.5495 },
+            { id: 8, nombre: "Yogurt Natural 1L", precio: 2.80, tienda: "Sucursal Sur", latitude: -0.2712, longitude: -78.5495 },
+            { id: 7, nombre: "Café Molido 250g", precio: 4.30, tienda: "Sucursal Sur", latitude: -0.2712, longitude: -78.5495 }
+        ];
+
+        var cheapestByStore = {};
+        allPromos.forEach(function(p) {
+            if (!cheapestByStore[p.tienda] || p.precio < cheapestByStore[p.tienda].precio) {
+                cheapestByStore[p.tienda] = p;
+            }
+        });
+
+        Object.keys(cheapestByStore).forEach(function(storeKey) {
+            var p = cheapestByStore[storeKey];
+            var marker = L.marker([p.latitude, p.longitude]).addTo(map);
+            
+            var content = '<div class="popup-badge">🔥 MEJOR OFERTA EN SUCURSAL</div>' +
+                          '<div class="popup-title">' + p.nombre + '</div>' +
+                          '<div class="popup-price">$' + p.precio.toFixed(2) + '</div>' +
+                          '<div class="popup-store">📍 ' + p.tienda + '</div>' +
+                          '<button class="btn-add" onclick="selectPromo(' + p.id + ')">Añadir al Carrito +</button>';
+            marker.bindPopup(content);
+        });
+
+        function selectPromo(id) {
+            window.location.href = "https://select-promo?id=" + id;
+        }
+    </script>
+</body>
+</html>

@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Configuration.getInstance().userAgentValue = "com.example.proyecto_bi_dos"
+        Configuration.getInstance().userAgentValue = "MiEmpresaCajeroApp/1.0"
 
         val nombres = intent.getStringArrayListExtra("nombres") ?: arrayListOf("Producto demo")
         val precios = intent.getDoubleArrayExtra("precios") ?: doubleArrayOf(5.0)

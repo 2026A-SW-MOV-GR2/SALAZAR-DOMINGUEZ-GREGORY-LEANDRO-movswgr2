@@ -1,0 +1,146 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" 
+      navigatingTo="onNavigatingTo" 
+      class="page">
+
+    <ActionBar title="Tiendita" class="action-bar">
+        <ActionItem text="Carrito" tap="{{ toggleCart }}" ios.position="right" android.position="actionBar">
+            <Label text="{{ cartBadgeText }}" class="action-item-label" />
+        </ActionItem>
+    </ActionBar>
+
+    <GridLayout rows="auto, *" columns="*">
+        
+        <StackLayout row="0" class="map-card-wrapper">
+            <GridLayout class="map-card-container">
+                <WebView src="~/assets/map.html" 
+                         loaded="onWebViewLoaded" 
+                         loadStarted="onLoadStarted" 
+                         class="osm-map-compact" />
+            </GridLayout>
+        </StackLayout>
+
+        <GridLayout row="1" rows="auto, *" columns="*" class="catalog-container">
+            <Label row="0" text="Catálogo de Productos" class="catalog-header" horizontalAlignment="center" />
+            
+            <ScrollView row="1" class="catalog-scroll" horizontalAlignment="center">
+                <WrapLayout orientation="horizontal" class="catalog-grid" horizontalAlignment="center">
+                    <Repeater items="{{ promotions }}" horizontalAlignment="center">
+                        <Repeater.itemsLayout>
+                            <WrapLayout orientation="horizontal" horizontalAlignment="center" />
+                        </Repeater.itemsLayout>
+                        <Repeater.itemTemplate>
+                            <StackLayout class="promo-card" tap="onPromoCardTap">
+                                <Image src="{{ imagen }}" class="promo-card-img" stretch="aspectFill" />
+                                <Label text="{{ isBestOffer ? '🔥 MEJOR PRECIO' : 'OFERTA' }}" class="promo-card-badge" />
+                                <Label text="{{ nombre }}" class="promo-card-title" />
+                                <Label text="{{ '$' + precio }}" class="promo-card-price" />
+                                <Label text="{{ '📍 ' + tienda }}" class="promo-card-store" />
+                                <Button text="Añadir +" tap="onPromoCardTap" class="btn-quick-add" />
+                            </StackLayout>
+                        </Repeater.itemTemplate>
+                    </Repeater>
+                </WrapLayout>
+            </ScrollView>
+        </GridLayout>
+
+        <AbsoluteLayout row="0" rowSpan="2" verticalAlignment="bottom" horizontalAlignment="right" class="fab-container">
+            <GridLayout left="0" top="0" tap="{{ toggleCart }}" class="fab-button">
+                <StackLayout verticalAlignment="center" horizontalAlignment="center">
+                    <Label text="🛒" class="fab-icon" />
+                </StackLayout>
+                <Label text="{{ cartCount }}" 
+                       visibility="{{ hasCartItems ? 'visible' : 'collapsed' }}" 
+                       class="fab-badge" />
+            </GridLayout>
+        </AbsoluteLayout>
+
+        <GridLayout row="0" rowSpan="2" rows="*" columns="*" 
+                    visibility="{{ isDialogVisible ? 'visible' : 'collapsed' }}" 
+                    class="modal-backdrop">
+            
+            <StackLayout verticalAlignment="center" horizontalAlignment="center" class="modal-card">
+                <Label text="🛒 Agregar a Tiendita" class="modal-title" />
+                
+                <StackLayout class="modal-body">
+                    <Image src="{{ selectedProductImage }}" 
+                           class="modal-product-img" 
+                           stretch="aspectFill" />
+
+                    <Label text="{{ selectedProductName }}" class="modal-product-name" />
+                    <Label text="{{ selectedProductPriceFormatted }}" class="modal-product-price" />
+                    <Label text="{{ selectedProductStore }}" class="modal-product-store" />
+                    
+                    <StackLayout class="qty-selector-container">
+                        <Label text="Cantidad a comprar:" class="qty-label" />
+                        <FlexboxLayout class="qty-controls">
+                            <Button text="-" tap="{{ decrementQuantity }}" class="btn-qty-minus" />
+                            <Label text="{{ selectedQuantity }}" class="qty-value" />
+                            <Button text="+" tap="{{ incrementQuantity }}" class="btn-qty-plus" />
+                        </FlexboxLayout>
+                    </StackLayout>
+
+                    <Label text="{{ 'Subtotal: ' + dialogSubtotalFormatted }}" class="modal-subtotal" />
+                </StackLayout>
+
+                <FlexboxLayout class="modal-actions">
+                    <Button text="Cancelar" tap="{{ cancelAddToCart }}" class="btn-cancel" />
+                    <Button text="Añadir +" tap="{{ confirmAddToCart }}" class="btn-confirm" />
+                </FlexboxLayout>
+            </StackLayout>
+        </GridLayout>
+
+        <GridLayout row="0" rowSpan="2" rows="auto, *, auto" columns="*" 
+                    visibility="{{ isCartVisible ? 'visible' : 'collapsed' }}" 
+                    class="cart-overlay">
+            
+            <GridLayout row="0" columns="*, auto" class="cart-header">
+                <Label col="0" text="Carrito" class="cart-header-title" />
+                <Button col="1" text="✕" tap="{{ toggleCart }}" class="btn-close-cart" />
+            </GridLayout>
+
+            <ScrollView row="1" class="cart-items-scroll">
+                <StackLayout>
+                    <Label text="Tu carrito está vacío. ¡Selecciona un producto!" 
+                           visibility="{{ isCartEmpty ? 'visible' : 'collapsed' }}" 
+                           class="empty-cart-msg" />
+                    
+                    <Repeater items="{{ cartItems }}">
+                        <Repeater.itemTemplate>
+                            <GridLayout columns="auto, *, auto, auto" rows="auto" class="cart-item-card">
+                                <Image col="0" src="{{ imagen }}" class="cart-item-img" stretch="aspectFill" />
+
+                                <StackLayout col="1" verticalAlignment="center" class="cart-item-info">
+                                    <Label text="{{ nombre }}" class="cart-item-name" />
+                                    <Label text="{{ '$' + precio + ' c/u' }}" class="cart-item-unit-price" />
+                                </StackLayout>
+
+                                <FlexboxLayout col="2" class="cart-qty-controls">
+                                    <Button text="-" tap="decreaseCartItemQty" class="btn-cart-qty" />
+                                    <Label text="{{ cantidad }}" class="cart-qty-text" />
+                                    <Button text="+" tap="increaseCartItemQty" class="btn-cart-qty" />
+                                </FlexboxLayout>
+
+                                <StackLayout col="3" verticalAlignment="center" horizontalAlignment="right">
+                                    <Label text="{{ '$' + subtotal }}" class="cart-item-subtotal" />
+                                    <Button text="🗑" tap="removeCartItem" class="btn-remove-item" />
+                                </StackLayout>
+                            </GridLayout>
+                        </Repeater.itemTemplate>
+                    </Repeater>
+                </StackLayout>
+            </ScrollView>
+
+            <StackLayout row="2" class="cart-footer">
+                <GridLayout columns="*, auto" class="cart-total-row">
+                    <Label col="0" text="Total a pagar" class="cart-total-label" />
+                    <Label col="1" text="{{ cartTotalFormatted }}" class="cart-total-value" />
+                </GridLayout>
+
+                <Button text="Proceder al Pago →" 
+                        tap="{{ procederAlPago }}" 
+                        class="btn-proceed-payment" />
+            </StackLayout>
+        </GridLayout>
+
+    </GridLayout>
+</Page>

@@ -1,19 +1,32 @@
-*.iml
-.kotlin
-.gradle
+# Kotlin Multiplatform / Android Project .gitignore
+
+# Gradle & Build Artifacts
+.gradle/
 **/build/
-xcuserdata
 !src/**/build/
 local.properties
-.idea
-.DS_Store
-captures
-.externalNativeBuild
-.cxx
+*.apk
+*.aab
+captures/
+.externalNativeBuild/
+.cxx/
+*.iml
+.kotlin
+
+# iOS & Xcode Artifacts
+xcuserdata/
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+
+# Dependencies
 node_modules/
+
+# IDE & OS
+.idea/
+.DS_Store
+Thumbs.db
+*.log
